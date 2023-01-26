@@ -1,0 +1,38 @@
+---
+title: "Index"
+author: "Mario"
+date: "26/01/2023"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+```
+
+### Number of animals Seen
+```{r}
+data <- read.csv("data/observations_2022.csv")
+data %>%
+    group_by(RTU) %>% filter(RTU != "none") %>%
+    summarise(count=n())
+```
+### Capture Rate
+```{r}
+
+n_total <- nrow(data)
+n_hit <- data %>%
+  filter(animal != 0) %>%
+  nrow()
+
+percent_capture <- (n_hit/n_total)*100
+
+n_total ###Total Photos
+n_hit   ###Total Hits
+percent_capture ### Percent Capture Rate
+```
