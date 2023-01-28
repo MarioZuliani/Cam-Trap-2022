@@ -18,6 +18,7 @@ library(ggplot2)
 ### Number of animals Seen
 ```{r}
 data <- read.csv("data/observations_2022.csv")
+head(data)
 data %>%
     group_by(RTU) %>% filter(RTU != "none") %>%
     summarise(count=n())
@@ -36,3 +37,23 @@ n_total ###Total Photos
 n_hit   ###Total Hits
 percent_capture ### Percent Capture Rate
 ```
+# Test Wildlife Insight App Accuracy
+```{r}
+WI <- read.csv("images.csv")
+WI %>%
+    group_by(genus) %>% filter(genus != "NA") %>%
+    summarise(count=n())
+head(WI)
+
+n_total_WI <- nrow(WI)
+n_hit_WI <- WI %>%
+  filter(is_blank != 1) %>%   ### The WI file give blanks 1s and hits 0s
+  nrow()
+
+percent_capture_WI <- (n_hit_WI/n_total_WI)*100
+
+n_total_WI ###Total Photos
+n_hit_WI  ###Total Hits
+percent_capture_WI ### Percent Capture Rate
+```
+
