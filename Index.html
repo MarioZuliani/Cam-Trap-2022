@@ -207,18 +207,19 @@ head(data)</code></pre>
 <pre class="r"><code>data %&gt;%
     group_by(RTU) %&gt;% filter(RTU != &quot;none&quot;) %&gt;%
     summarise(count=n())</code></pre>
-<pre><code>## # A tibble: 9 × 2
-##   RTU                   count
-##   &lt;chr&gt;                 &lt;int&gt;
-## 1 &quot;&quot;                        2
-## 2 &quot;Antellope Squirrel&quot;     35
-## 3 &quot;Coyote&quot;                  6
-## 4 &quot;Ground Squirrel&quot;        29
-## 5 &quot;Jack Rabbit&quot;            16
-## 6 &quot;Kangaroo Rat&quot;          266
-## 7 &quot;San Joaquin Kit Fox&quot;     2
-## 8 &quot;Unidentifiable&quot;          9
-## 9 &quot;Unidentified Bird&quot;       2</code></pre>
+<pre><code>## # A tibble: 10 × 2
+##    RTU                   count
+##    &lt;chr&gt;                 &lt;int&gt;
+##  1 &quot;&quot;                        2
+##  2 &quot;Antellope Squirrel&quot;      1
+##  3 &quot;Antelope Squirrel&quot;      34
+##  4 &quot;Coyote&quot;                  6
+##  5 &quot;Ground Squirrel&quot;        29
+##  6 &quot;Jack Rabbit&quot;            16
+##  7 &quot;Kangaroo Rat&quot;          266
+##  8 &quot;San Joaquin Kit Fox&quot;     2
+##  9 &quot;Unidentifiable&quot;          9
+## 10 &quot;Unidentified Bird&quot;       2</code></pre>
 </div>
 <div id="capture-rate" class="section level3">
 <h3>Capture Rate</h3>
@@ -232,9 +233,9 @@ percent_capture &lt;- (n_hit/n_total)*100
 n_total ###Total Photos</code></pre>
 <pre><code>## [1] 1643</code></pre>
 <pre class="r"><code>n_hit   ###Total Hits</code></pre>
-<pre><code>## [1] 368</code></pre>
+<pre><code>## [1] 365</code></pre>
 <pre class="r"><code>percent_capture ### Percent Capture Rate</code></pre>
-<pre><code>## [1] 22.39805</code></pre>
+<pre><code>## [1] 22.21546</code></pre>
 </div>
 <div id="test-wildlife-insight-app-accuracy" class="section level1">
 <h1>Test Wildlife Insight App Accuracy</h1>
@@ -257,20 +258,13 @@ WI %&gt;%
 ## 10 &quot;Taxidea&quot;              2
 ## 11 &quot;Vulpes&quot;               5</code></pre>
 <pre class="r"><code>head(WI)</code></pre>
-<pre><code>##   project_id             deployment_id                             image_id
-## 1    2004862 Carrizo 3 Density 1 Cam 1 476e5a2a-9992-4b8d-b0db-6b84f834601a
-## 2    2004862 Carrizo 3 Density 1 Cam 1 d21f7197-e6de-48e6-9915-f618a2a3f3c2
-## 3    2004862 Carrizo 3 Density 1 Cam 1 53ae1b05-8bff-4b47-81c7-502e082963bb
-## 4    2004862 Carrizo 3 Density 1 Cam 1 4b4d5f94-744c-4d78-be8e-5a4a16738e3e
-## 5    2004862 Carrizo 3 Density 1 Cam 1 955ade17-49bd-4458-abf6-8fe4ae309780
-## 6    2004862 Carrizo 3 Density 1 Cam 1 a45efcd1-6b0a-4324-8c6c-c54ff464481f
-##       filename
-## 1 DSCF0066.JPG
-## 2 DSCF0073.JPG
-## 3 DSCF0071.JPG
-## 4 DSCF0076.JPG
-## 5 DSCF0068.JPG
-## 6 DSCF0078.JPG
+<pre><code>##   project_id  region site shrub_density plot cam_ID cam_date year file_name
+## 1    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0066
+## 2    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0073
+## 3    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0071
+## 4    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0076
+## 5    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0068
+## 6    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0078
 ##                                                                                                                                 location
 ## 1 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/476e5a2a-9992-4b8d-b0db-6b84f834601a.JPG
 ## 2 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/d21f7197-e6de-48e6-9915-f618a2a3f3c2.JPG
@@ -279,12 +273,12 @@ WI %&gt;%
 ## 5 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/955ade17-49bd-4458-abf6-8fe4ae309780.JPG
 ## 6 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/a45efcd1-6b0a-4324-8c6c-c54ff464481f.JPG
 ##   is_blank   identified_by                          wi_taxon_id        class
-## 1        0 Computer vision 4457a0c6-cb68-44c0-9c27-ad08abe57755     Mammalia
-## 2        1 Computer vision f1856211-cfb7-4a5b-9158-c0f72fd09ee6             
-## 3        0 Computer vision 1f689929-883d-4dae-958c-3d57ab5b6c16             
-## 4        0 Computer vision f2efdae9-efb8-48fb-8a91-eccf79ab4ffb No CV Result
-## 5        0 Computer vision 1f689929-883d-4dae-958c-3d57ab5b6c16             
-## 6        0 Computer vision 4457a0c6-cb68-44c0-9c27-ad08abe57755     Mammalia
+## 1        1 Computer vision 4457a0c6-cb68-44c0-9c27-ad08abe57755     Mammalia
+## 2        0 Computer vision f1856211-cfb7-4a5b-9158-c0f72fd09ee6             
+## 3        1 Computer vision 1f689929-883d-4dae-958c-3d57ab5b6c16             
+## 4        1 Computer vision f2efdae9-efb8-48fb-8a91-eccf79ab4ffb No CV Result
+## 5        1 Computer vision 1f689929-883d-4dae-958c-3d57ab5b6c16             
+## 6        1 Computer vision 4457a0c6-cb68-44c0-9c27-ad08abe57755     Mammalia
 ##          order       family        genus      species  common_name uncertainty
 ## 1    Carnivora      Canidae       Vulpes     macrotis      Kit Fox          NA
 ## 2                                                            Blank          NA
@@ -292,30 +286,23 @@ WI %&gt;%
 ## 4 No CV Result No CV Result No CV Result No CV Result No CV Result          NA
 ## 5                                                           Animal          NA
 ## 6    Carnivora      Canidae       Vulpes     macrotis      Kit Fox          NA
-##                 timestamp number_of_objects age sex animal_recognizable
-## 1 2023-01-27 19:07:43.822                 1  NA  NA               false
-## 2     2021-01-05 22:15:54                 1  NA  NA               false
-## 3     2021-01-05 21:42:15                 1  NA  NA               false
-## 4     2021-01-06 14:49:02                 1  NA  NA               false
-## 5     2021-01-05 19:06:39                 1  NA  NA               false
-## 6     2021-01-06 17:46:04                 1  NA  NA               false
-##   individual_id individual_animal_notes behavior highlighted markings
-## 1            NA                      NA       NA       false       NA
-## 2            NA                      NA       NA       false       NA
-## 3            NA                      NA       NA       false       NA
-## 4            NA                      NA       NA       false       NA
-## 5            NA                      NA       NA       false       NA
-## 6            NA                      NA       NA       false       NA
-##   cv_confidence license
-## 1          0.79     CC0
-## 2          0.95     CC0
-## 3          0.65     CC0
-## 4          0.23     CC0
-## 5          0.82     CC0
-## 6          0.63     CC0</code></pre>
+##          timestamp number_of_objects age sex animal_recognizable individual_id
+## 1          07:43.8                 1  NA  NA               FALSE            NA
+## 2 2021-01-05 22:15                 1  NA  NA               FALSE            NA
+## 3 2021-01-05 21:42                 1  NA  NA               FALSE            NA
+## 4 2021-01-06 14:49                 1  NA  NA               FALSE            NA
+## 5 2021-01-05 19:06                 1  NA  NA               FALSE            NA
+## 6 2021-01-06 17:46                 1  NA  NA               FALSE            NA
+##   individual_animal_notes behavior highlighted markings cv_confidence license
+## 1                      NA       NA       FALSE       NA          0.79     CC0
+## 2                      NA       NA       FALSE       NA          0.95     CC0
+## 3                      NA       NA       FALSE       NA          0.65     CC0
+## 4                      NA       NA       FALSE       NA          0.23     CC0
+## 5                      NA       NA       FALSE       NA          0.82     CC0
+## 6                      NA       NA       FALSE       NA          0.63     CC0</code></pre>
 <pre class="r"><code>n_total_WI &lt;- nrow(WI)
 n_hit_WI &lt;- WI %&gt;%
-  filter(is_blank != 1) %&gt;%   ### The WI file give blanks 1s and hits 0s
+  filter(is_blank != 0) %&gt;%   ### The WI file give blanks 1s and hits 0s
   nrow()
 
 percent_capture_WI &lt;- (n_hit_WI/n_total_WI)*100
@@ -323,9 +310,39 @@ percent_capture_WI &lt;- (n_hit_WI/n_total_WI)*100
 n_total_WI ###Total Photos</code></pre>
 <pre><code>## [1] 1633</code></pre>
 <pre class="r"><code>n_hit_WI  ###Total Hits</code></pre>
-<pre><code>## [1] 373</code></pre>
+<pre><code>## [1] 374</code></pre>
 <pre class="r"><code>percent_capture_WI ### Percent Capture Rate</code></pre>
-<pre><code>## [1] 22.8414</code></pre>
+<pre><code>## [1] 22.90263</code></pre>
+<ol style="list-style-type: decimal">
+<li>Capture rate by hand is 22.39% and the capture rate for WI is 22.90%</li>
+</ol>
+<pre class="r"><code>### Step 2: Compare the 2 methods to see if they return hits and misses on the same photos.
+WI_filtered &lt;- WI %&gt;%
+  select(region, site, shrub_density, plot, cam_ID, file_name, is_blank)
+
+combined &lt;- left_join(data, WI_filtered, all = TRUE)</code></pre>
+<pre><code>## Joining, by = c(&quot;file_name&quot;, &quot;region&quot;, &quot;site&quot;, &quot;plot&quot;, &quot;shrub_density&quot;,
+## &quot;cam_ID&quot;)</code></pre>
+<pre class="r"><code>combined &lt;- combined%&gt;%
+  select(-tool, -behavior, -observation, -notes)
+
+t.test(combined$animal, combined$is_blank, paired = TRUE, alternative = &quot;two.sided&quot;)</code></pre>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  combined$animal and combined$is_blank
+## t = -1.6338, df = 1640, p-value = 0.1025
+## alternative hypothesis: true mean difference is not equal to 0
+## 95 percent confidence interval:
+##  -0.021455248  0.001954943
+## sample estimates:
+## mean difference 
+##    -0.009750152</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>The data between hand counting and WI seems to be worryingly different from one another.</li>
+<li>Most likely it was the software not picking up animal individuals and identifying individuals when not present.</li>
+</ol>
+<p>###Try combining WI data to Metadata</p>
 </div>
 
 

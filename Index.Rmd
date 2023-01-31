@@ -47,7 +47,7 @@ head(WI)
 
 n_total_WI <- nrow(WI)
 n_hit_WI <- WI %>%
-  filter(is_blank != 1) %>%   ### The WI file give blanks 1s and hits 0s
+  filter(is_blank != 0) %>%   ### The WI file give blanks 1s and hits 0s
   nrow()
 
 percent_capture_WI <- (n_hit_WI/n_total_WI)*100
@@ -55,5 +55,25 @@ percent_capture_WI <- (n_hit_WI/n_total_WI)*100
 n_total_WI ###Total Photos
 n_hit_WI  ###Total Hits
 percent_capture_WI ### Percent Capture Rate
+```
+1) Capture rate by hand is 22.39% and the capture rate for WI is 22.90%
+
+```{r}
+### Step 2: Compare the 2 methods to see if they return hits and misses on the same photos.
+WI_filtered <- WI %>%
+  select(region, site, shrub_density, plot, cam_ID, file_name, is_blank)
+
+combined <- left_join(data, WI_filtered, all = TRUE)
+combined <- combined%>%
+  select(-tool, -behavior, -observation, -notes)
+
+t.test(combined$animal, combined$is_blank, paired = TRUE, alternative = "two.sided")
+```
+2) The data between hand counting and WI seems to be worryingly different from one another.
+3) Most likely it was the software not picking up animal individuals and identifying individuals when not present.
+
+###Try combining WI data to Metadata
+```{r}
+
 ```
 
