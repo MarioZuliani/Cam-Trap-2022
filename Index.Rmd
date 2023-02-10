@@ -61,9 +61,9 @@ percent_capture_WI ### Percent Capture Rate
 ```{r}
 ### Step 2: Compare the 2 methods to see if they return hits and misses on the same photos.
 WI_filtered <- WI %>%
-  select(region, site, shrub_density, plot, cam_ID, file_name, is_blank)
+  select(region, site, shrub_density, plot, cam_ID, week, file_name, is_blank, common_name)
 
-combined <- left_join(data, WI_filtered, all = TRUE)
+combined <- left_join(data, WI_filtered, by=c("region", "site", "shrub_density", "plot", "week", "cam_ID", "file_name"))
 combined <- combined%>%
   select(-tool, -behavior, -observation, -notes)
 
@@ -74,6 +74,23 @@ t.test(combined$animal, combined$is_blank, paired = TRUE, alternative = "two.sid
 
 ###Try combining WI data to Metadata
 ```{r}
+df <- combined%>%
+  rowwise()%>%
+  mutate(difference = animal-is_blank)
 
+df <- df %>%
+  filter(common_name != "Human")
+
+n_negative <- df %>%
+  filter(difference == -1) %>% 
+  nrow()
+
+n_zero <- df %>%
+  filter(difference == 0) %>% 
+  nrow()
+
+n_one <- df %>%
+  filter(difference == 1) %>% 
+  nrow()
 ```
-
+I crossreferenced everything and the ones that WI says there are hits, I confirmed there are hits BUT the files say I didnt. Wheni go back and check my data says that i recorded it as an observation. Not sure whats going on with the data.

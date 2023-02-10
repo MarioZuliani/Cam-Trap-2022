@@ -207,19 +207,20 @@ head(data)</code></pre>
 <pre class="r"><code>data %&gt;%
     group_by(RTU) %&gt;% filter(RTU != &quot;none&quot;) %&gt;%
     summarise(count=n())</code></pre>
-<pre><code>## # A tibble: 10 × 2
+<pre><code>## # A tibble: 11 × 2
 ##    RTU                   count
 ##    &lt;chr&gt;                 &lt;int&gt;
 ##  1 &quot;&quot;                        2
-##  2 &quot;Antellope Squirrel&quot;      1
-##  3 &quot;Antelope Squirrel&quot;      34
-##  4 &quot;Coyote&quot;                  6
-##  5 &quot;Ground Squirrel&quot;        29
-##  6 &quot;Jack Rabbit&quot;            16
-##  7 &quot;Kangaroo Rat&quot;          266
-##  8 &quot;San Joaquin Kit Fox&quot;     2
-##  9 &quot;Unidentifiable&quot;          9
-## 10 &quot;Unidentified Bird&quot;       2</code></pre>
+##  2 &quot;America Badger&quot;          1
+##  3 &quot;Antellope Squirrel&quot;      1
+##  4 &quot;Antelope Squirrel&quot;      34
+##  5 &quot;Coyote&quot;                  6
+##  6 &quot;Ground Squirrel&quot;        29
+##  7 &quot;Jack Rabbit&quot;            16
+##  8 &quot;Kangaroo Rat&quot;          265
+##  9 &quot;San Joaquin Kit Fox&quot;     2
+## 10 &quot;Unidentifiable&quot;          9
+## 11 &quot;Unidentified Bird&quot;       2</code></pre>
 </div>
 <div id="capture-rate" class="section level3">
 <h3>Capture Rate</h3>
@@ -258,13 +259,20 @@ WI %&gt;%
 ## 10 &quot;Taxidea&quot;              2
 ## 11 &quot;Vulpes&quot;               5</code></pre>
 <pre class="r"><code>head(WI)</code></pre>
-<pre><code>##   project_id  region site shrub_density plot cam_ID cam_date year file_name
-## 1    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0066
-## 2    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0073
-## 3    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0071
-## 4    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0076
-## 5    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0068
-## 6    2004862 Carrizo    3          high    1      1   17-May 2022  DSCF0078
+<pre><code>##   project_id  region site shrub_density plot cam_ID week cam_date year
+## 1    2004862 Carrizo    3          high    1      1    1   17-May 2022
+## 2    2004862 Carrizo    3          high    1      1    1   17-May 2022
+## 3    2004862 Carrizo    3          high    1      1    1   17-May 2022
+## 4    2004862 Carrizo    3          high    1      1    1   17-May 2022
+## 5    2004862 Carrizo    3          high    1      1    1   17-May 2022
+## 6    2004862 Carrizo    3          high    1      1    1   17-May 2022
+##   file_name
+## 1  DSCF0066
+## 2  DSCF0073
+## 3  DSCF0071
+## 4  DSCF0076
+## 5  DSCF0068
+## 6  DSCF0078
 ##                                                                                                                                 location
 ## 1 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/476e5a2a-9992-4b8d-b0db-6b84f834601a.JPG
 ## 2 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/d21f7197-e6de-48e6-9915-f618a2a3f3c2.JPG
@@ -318,12 +326,10 @@ n_total_WI ###Total Photos</code></pre>
 </ol>
 <pre class="r"><code>### Step 2: Compare the 2 methods to see if they return hits and misses on the same photos.
 WI_filtered &lt;- WI %&gt;%
-  select(region, site, shrub_density, plot, cam_ID, file_name, is_blank)
+  select(region, site, shrub_density, plot, cam_ID, week, file_name, is_blank, common_name)
 
-combined &lt;- left_join(data, WI_filtered, all = TRUE)</code></pre>
-<pre><code>## Joining, by = c(&quot;file_name&quot;, &quot;region&quot;, &quot;site&quot;, &quot;plot&quot;, &quot;shrub_density&quot;,
-## &quot;cam_ID&quot;)</code></pre>
-<pre class="r"><code>combined &lt;- combined%&gt;%
+combined &lt;- left_join(data, WI_filtered, by=c(&quot;region&quot;, &quot;site&quot;, &quot;shrub_density&quot;, &quot;plot&quot;, &quot;week&quot;, &quot;cam_ID&quot;, &quot;file_name&quot;))
+combined &lt;- combined%&gt;%
   select(-tool, -behavior, -observation, -notes)
 
 t.test(combined$animal, combined$is_blank, paired = TRUE, alternative = &quot;two.sided&quot;)</code></pre>
@@ -343,6 +349,25 @@ t.test(combined$animal, combined$is_blank, paired = TRUE, alternative = &quot;tw
 <li>Most likely it was the software not picking up animal individuals and identifying individuals when not present.</li>
 </ol>
 <p>###Try combining WI data to Metadata</p>
+<pre class="r"><code>df &lt;- combined%&gt;%
+  rowwise()%&gt;%
+  mutate(difference = animal-is_blank)
+
+df &lt;- df %&gt;%
+  filter(common_name != &quot;Human&quot;)
+
+n_negative &lt;- df %&gt;%
+  filter(difference == -1) %&gt;% 
+  nrow()
+
+n_zero &lt;- df %&gt;%
+  filter(difference == 0) %&gt;% 
+  nrow()
+
+n_one &lt;- df %&gt;%
+  filter(difference == 1) %&gt;% 
+  nrow()</code></pre>
+<p>I crossreferenced everything and the ones that WI says there are hits, I confirmed there are hits BUT the files say I didnt. Wheni go back and check my data says that i recorded it as an observation. Not sure whats going on with the data.</p>
 </div>
 
 
