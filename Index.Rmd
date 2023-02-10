@@ -94,3 +94,16 @@ n_one <- df %>%
   nrow()
 ```
 I crossreferenced everything and the ones that WI says there are hits, I confirmed there are hits BUT the files say I didnt. Wheni go back and check my data says that i recorded it as an observation. Not sure whats going on with the data.
+
+
+RATES:
+Mario 22.4
+WI 22.9
+
+Differences Tallied"
+-1 : 41   (After reviewing the files this number is not accurate and should be MUCH closer to 0)
+0 : 1545
+1 : 40       (Makes sense as the software sometimes does not properly identify animals)
+
+specific photos:
+So after reviewing it turn out that I uploaded an additional file of photos, hence why I was getting so many -1s in the data. Excluding those, there should be next to no -1s in the data.
