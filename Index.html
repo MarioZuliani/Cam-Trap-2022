@@ -168,16 +168,8 @@ pre code {
 </div>
 
 
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-## ✔ ggplot2 3.4.0      ✔ purrr   0.3.5 
-## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
-## ✔ readr   2.1.3      ✔ forcats 0.5.2 
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(dplyr)
+<pre class="r"><code>library(tidyverse)
+library(dplyr)
 library(ggplot2)</code></pre>
 <div id="number-of-animals-seen" class="section level3">
 <h3>Number of animals Seen</h3>
@@ -231,9 +223,9 @@ n_hit &lt;- data %&gt;%
 
 percent_capture &lt;- (n_hit/n_total)*100
 
-n_total ###Total Photos</code></pre>
+n_total ### Total Photos</code></pre>
 <pre><code>## [1] 1643</code></pre>
-<pre class="r"><code>n_hit   ###Total Hits</code></pre>
+<pre class="r"><code>n_hit   ### Total Hits</code></pre>
 <pre><code>## [1] 365</code></pre>
 <pre class="r"><code>percent_capture ### Percent Capture Rate</code></pre>
 <pre><code>## [1] 22.21546</code></pre>
@@ -313,9 +305,9 @@ n_hit_WI &lt;- WI %&gt;%
 
 percent_capture_WI &lt;- (n_hit_WI/n_total_WI)*100
 
-n_total_WI ###Total Photos</code></pre>
+n_total_WI ### Total Photos</code></pre>
 <pre><code>## [1] 1633</code></pre>
-<pre class="r"><code>n_hit_WI  ###Total Hits</code></pre>
+<pre class="r"><code>n_hit_WI  ### Total Hits</code></pre>
 <pre><code>## [1] 376</code></pre>
 <pre class="r"><code>percent_capture_WI ### Percent Capture Rate</code></pre>
 <pre><code>## [1] 23.02511</code></pre>
@@ -328,25 +320,9 @@ WI_filtered &lt;- WI %&gt;%
 
 combined &lt;- left_join(data, WI_filtered, by=c(&quot;region&quot;, &quot;site&quot;, &quot;shrub_density&quot;, &quot;plot&quot;, &quot;cam_ID&quot;, &quot;file_name&quot;))
 combined &lt;- combined%&gt;%
-  select(-tool, -behavior, -observation, -notes)
-
-t.test(combined$animal, combined$is_blank, paired = TRUE, alternative = &quot;two.sided&quot;)</code></pre>
-<pre><code>## 
-##  Paired t-test
-## 
-## data:  combined$animal and combined$is_blank
-## t = -2.4966, df = 1477, p-value = 0.01265
-## alternative hypothesis: true mean difference is not equal to 0
-## 95 percent confidence interval:
-##  -0.025371658 -0.003045122
-## sample estimates:
-## mean difference 
-##     -0.01420839</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>The data between hand counting and WI seems to be worryingly different from one another.</li>
-<li>Most likely it was the software not picking up animal individuals and identifying individuals when not present.</li>
-</ol>
-<p>###Try combining WI data to Metadata</p>
+  select(-tool, -behavior, -observation, -notes)</code></pre>
+<div id="try-combining-wi-data-to-metadata" class="section level3">
+<h3>Try combining WI data to Metadata</h3>
 <pre class="r"><code>df &lt;- combined%&gt;%
   rowwise()%&gt;%
   mutate(difference = animal-is_blank)
@@ -365,17 +341,68 @@ n_zero &lt;- df %&gt;%
 n_one &lt;- df %&gt;%
   filter(difference == 1) %&gt;% 
   nrow()</code></pre>
-<p>I crossreferenced everything and the ones that WI says there are hits, I confirmed there are hits BUT the files say I didnt. Wheni go back and check my data says that i recorded it as an observation. Not sure whats going on with the data.</p>
 <p>RATES: Mario 22.2 WI 23.025</p>
-<p>Differences Tallied&quot; -1 : 31 (After reviewing the files this number is not accurate and should be MUCH closer to 0)</p>
+<p>Differences Tallied&quot; -1 : 31</p>
 <p>0 : 1407</p>
-<p>1 : 25 (Makes sense as the software sometimes does not properly identify animals)</p>
+<p>1 : 25</p>
 <pre class="r"><code>### Percent hits on cameras via human
 (n_hit/n_total)*100</code></pre>
 <pre><code>## [1] 22.21546</code></pre>
 <pre class="r"><code>### Percent animals missed from WI vs visually seen
 (n_one/n_hit)*100</code></pre>
 <pre><code>## [1] 6.849315</code></pre>
+<pre class="r"><code>### Percent capture rate Table
+Percent &lt;- read.csv(&quot;Percent Captures.csv&quot;)</code></pre>
+<pre><code>## Warning in read.table(file = file, header = header, sep = sep, quote = quote, :
+## incomplete final line found by readTableHeader on &#39;Percent Captures.csv&#39;</code></pre>
+<pre class="r"><code>knitr::kable(Percent)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">method</th>
+<th align="right">percent.capture</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">visual</td>
+<td align="right">22.215</td>
+</tr>
+<tr class="even">
+<td align="left">WI</td>
+<td align="right">23.025</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>### Comparison of Visual and WI processing
+
+negative &lt;- data.frame(n_negative)
+zero &lt;- data.frame(n_zero)
+positive &lt;- data.frame(n_one)
+tally &lt;- merge(negative, zero)
+tally &lt;- merge(tally, positive)
+
+names(tally)[1] &lt;- &quot;WI Detected (-1)&quot;
+names(tally)[2] &lt;- &quot;Visual &amp; WI Detected (0)&quot;
+names(tally)[3] &lt;- &quot;Visually Detected (1)&quot;
+knitr::kable(tally)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">WI Detected (-1)</th>
+<th align="right">Visual &amp; WI Detected (0)</th>
+<th align="right">Visually Detected (1)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">31</td>
+<td align="right">1407</td>
+<td align="right">25</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div id="so-after-cleaning-everything-up-and-running-the-math-wi-seems-to-only-miss-6.8-of-animal-photos-where-compared-to-visually-processing-the-photos.-i-think-this-is-a-good-tool-then" class="section level1">
 <h1>So after cleaning everything up, and running the math, WI seems to only miss 6.8% of animal photos where compared to visually processing the photos. I think this is a good tool then</h1>
