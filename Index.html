@@ -191,12 +191,12 @@ head(data)</code></pre>
 ## 5 2022  5    Mario  DSCF0005 Carrizo    3 camera trap   17-May          1    1
 ## 6 2022  6    Mario  DSCF0006 Carrizo    3 camera trap   17-May          1    1
 ##   day rep plot shrub_density cam_ID photo_rep animal          RTU actual_time
-## 1   1   1    1          high      1         1      0         none        6:37
-## 2   1   2    1          high      1         2      0         none        6:40
-## 3   1   3    1          high      1         3      0         none        6:44
-## 4   1   4    1          high      1         4      1 Kangaroo Rat       14:57
-## 5   1   5    1          high      1         5      1 Kangaroo Rat       15:18
-## 6   1   6    1          high      1         6      1 Kangaroo Rat       15:20
+## 1   1   1    1       density      1         1      0         none        6:37
+## 2   1   2    1       density      1         2      0         none        6:40
+## 3   1   3    1       density      1         3      0         none        6:44
+## 4   1   4    1       density      1         4      1 Kangaroo Rat       14:57
+## 5   1   5    1       density      1         5      1 Kangaroo Rat       15:18
+## 6   1   6    1       density      1         6      1 Kangaroo Rat       15:20
 ##   time_block behavior observation           notes microsite
 ## 1         am                      Camera Deployed     shrub
 ## 2         am                                          shrub
@@ -240,74 +240,72 @@ n_total ###Total Photos</code></pre>
 </div>
 <div id="test-wildlife-insight-app-accuracy" class="section level1">
 <h1>Test Wildlife Insight App Accuracy</h1>
-<pre class="r"><code>WI &lt;- read.csv(&quot;images.csv&quot;)
+<pre class="r"><code>WI &lt;- read.csv(&quot;images_2.csv&quot;)
 WI %&gt;%
     group_by(genus) %&gt;% filter(genus != &quot;NA&quot;) %&gt;%
     summarise(count=n())</code></pre>
-<pre><code>## # A tibble: 11 × 2
-##    genus              count
-##    &lt;chr&gt;              &lt;int&gt;
-##  1 &quot;&quot;                  1466
-##  2 &quot;Ammoperdix&quot;           8
-##  3 &quot;Ammospermophilus&quot;     4
-##  4 &quot;Canis&quot;                5
-##  5 &quot;Dipodomys&quot;           39
-##  6 &quot;Homo&quot;                14
-##  7 &quot;Lepus&quot;               20
-##  8 &quot;Lynx&quot;                 2
-##  9 &quot;No CV Result&quot;        68
-## 10 &quot;Taxidea&quot;              2
-## 11 &quot;Vulpes&quot;               5</code></pre>
+<pre><code>## # A tibble: 9 × 2
+##   genus          count
+##   &lt;chr&gt;          &lt;int&gt;
+## 1 &quot;&quot;              1491
+## 2 &quot;Ammoperdix&quot;      10
+## 3 &quot;Canis&quot;            6
+## 4 &quot;Homo&quot;            14
+## 5 &quot;Lepus&quot;           24
+## 6 &quot;Lynx&quot;             2
+## 7 &quot;No CV Result&quot;    74
+## 8 &quot;Taxidea&quot;          2
+## 9 &quot;Vulpes&quot;          10</code></pre>
 <pre class="r"><code>head(WI)</code></pre>
-<pre><code>##   project_id  region site shrub_density plot cam_ID week cam_date year
-## 1    2004862 Carrizo    3          high    1      1    1   17-May 2022
-## 2    2004862 Carrizo    3          high    1      1    1   17-May 2022
-## 3    2004862 Carrizo    3          high    1      1    1   17-May 2022
-## 4    2004862 Carrizo    3          high    1      1    1   17-May 2022
-## 5    2004862 Carrizo    3          high    1      1    1   17-May 2022
-## 6    2004862 Carrizo    3          high    1      1    1   17-May 2022
-##   file_name
-## 1  DSCF0066
-## 2  DSCF0073
-## 3  DSCF0071
-## 4  DSCF0076
-## 5  DSCF0068
-## 6  DSCF0078
-##                                                                                                                                 location
-## 1 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/476e5a2a-9992-4b8d-b0db-6b84f834601a.JPG
-## 2 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/d21f7197-e6de-48e6-9915-f618a2a3f3c2.JPG
-## 3 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/53ae1b05-8bff-4b47-81c7-502e082963bb.JPG
-## 4 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/4b4d5f94-744c-4d78-be8e-5a4a16738e3e.JPG
-## 5 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/955ade17-49bd-4458-abf6-8fe4ae309780.JPG
-## 6 gs://145625598251_2004862_978_cam_traps_carrizo_20__main/deployment/2211685/prod/directUpload/a45efcd1-6b0a-4324-8c6c-c54ff464481f.JPG
-##   is_blank   identified_by                          wi_taxon_id        class
-## 1        1 Computer vision 4457a0c6-cb68-44c0-9c27-ad08abe57755     Mammalia
-## 2        0 Computer vision f1856211-cfb7-4a5b-9158-c0f72fd09ee6             
-## 3        1 Computer vision 1f689929-883d-4dae-958c-3d57ab5b6c16             
-## 4        1 Computer vision f2efdae9-efb8-48fb-8a91-eccf79ab4ffb No CV Result
-## 5        1 Computer vision 1f689929-883d-4dae-958c-3d57ab5b6c16             
-## 6        1 Computer vision 4457a0c6-cb68-44c0-9c27-ad08abe57755     Mammalia
-##          order       family        genus      species  common_name uncertainty
-## 1    Carnivora      Canidae       Vulpes     macrotis      Kit Fox          NA
-## 2                                                            Blank          NA
-## 3                                                           Animal          NA
-## 4 No CV Result No CV Result No CV Result No CV Result No CV Result          NA
-## 5                                                           Animal          NA
-## 6    Carnivora      Canidae       Vulpes     macrotis      Kit Fox          NA
+<pre><code>##   project_id  region site shrub_density plot cam_ID        date
+## 1    2004957 Carrizo    3       density    2      2  17/05/2022
+## 2    2004957 Carrizo    3       density    2      2  17/05/2022
+## 3    2004957 Carrizo    3       density    2      2  17/05/2022
+## 4    2004957 Carrizo    3       density    2      2  17/05/2022
+## 5    2004957 Carrizo    3       density    2      2  17/05/2022
+## 6    2004957 Carrizo    3       density    2      2  17/05/2022
+##                               image_id file_name
+## 1 53004bd7-804f-4bf8-832c-bc489b995742  DSCF0004
+## 2 5614afef-f55e-4426-b25d-dc3141a7fff6  DSCF0003
+## 3 4043251e-5791-4677-89cf-7c3631673daf  DSCF0006
+## 4 b17bd793-1015-4208-98fe-eed11284ff5d  DSCF0005
+## 5 c622870c-d641-45a7-bd25-42d326aa4e54  DSCF0001
+## 6 cd065c1b-3bd5-4954-b6af-57ad1188e9bd  DSCF0010
+##                                                                                                                           location
+## 1 gs://145625598251_2004957_186_cam_traps_2022__main/deployment/2213467/prod/directUpload/53004bd7-804f-4bf8-832c-bc489b995742.JPG
+## 2 gs://145625598251_2004957_186_cam_traps_2022__main/deployment/2213467/prod/directUpload/5614afef-f55e-4426-b25d-dc3141a7fff6.JPG
+## 3 gs://145625598251_2004957_186_cam_traps_2022__main/deployment/2213467/prod/directUpload/4043251e-5791-4677-89cf-7c3631673daf.JPG
+## 4 gs://145625598251_2004957_186_cam_traps_2022__main/deployment/2213467/prod/directUpload/b17bd793-1015-4208-98fe-eed11284ff5d.JPG
+## 5 gs://145625598251_2004957_186_cam_traps_2022__main/deployment/2213467/prod/directUpload/c622870c-d641-45a7-bd25-42d326aa4e54.JPG
+## 6 gs://145625598251_2004957_186_cam_traps_2022__main/deployment/2213467/prod/directUpload/cd065c1b-3bd5-4954-b6af-57ad1188e9bd.JPG
+##   is_blank   identified_by                          wi_taxon_id    class
+## 1        1 Computer vision e70effd7-855e-4ba3-966c-a4fbb74eab13 Mammalia
+## 2        0 Computer vision f1856211-cfb7-4a5b-9158-c0f72fd09ee6         
+## 3        0 Computer vision f1856211-cfb7-4a5b-9158-c0f72fd09ee6         
+## 4        0 Computer vision f1856211-cfb7-4a5b-9158-c0f72fd09ee6         
+## 5        1 Computer vision 990ae9dd-7a59-4344-afcb-1b7b21368000 Mammalia
+## 6        0 Computer vision f1856211-cfb7-4a5b-9158-c0f72fd09ee6         
+##       order     family   genus species     common_name uncertainty
+## 1 Carnivora Mustelidae Taxidea   taxus American Badger          NA
+## 2                                                Blank          NA
+## 3                                                Blank          NA
+## 4                                                Blank          NA
+## 5  Primates  Hominidae    Homo sapiens           Human          NA
+## 6                                                Blank          NA
 ##          timestamp number_of_objects age sex animal_recognizable individual_id
-## 1          07:43.8                 1  NA  NA               FALSE            NA
-## 2 2021-01-05 22:15                 1  NA  NA               FALSE            NA
-## 3 2021-01-05 21:42                 1  NA  NA               FALSE            NA
-## 4 2021-01-06 14:49                 1  NA  NA               FALSE            NA
-## 5 2021-01-05 19:06                 1  NA  NA               FALSE            NA
-## 6 2021-01-06 17:46                 1  NA  NA               FALSE            NA
+## 1 2021-01-02 15:13                 1  NA  NA               FALSE            NA
+## 2 2021-01-02 15:12                 1  NA  NA               FALSE            NA
+## 3 2021-01-02 17:07                 1  NA  NA               FALSE            NA
+## 4 2021-01-02 16:28                 1  NA  NA               FALSE            NA
+## 5  2021-01-02 6:58                 1  NA  NA               FALSE            NA
+## 6 2021-01-03 15:04                 1  NA  NA               FALSE            NA
 ##   individual_animal_notes behavior highlighted markings cv_confidence license
-## 1                      NA       NA       FALSE       NA          0.79     CC0
-## 2                      NA       NA       FALSE       NA          0.95     CC0
-## 3                      NA       NA       FALSE       NA          0.65     CC0
-## 4                      NA       NA       FALSE       NA          0.23     CC0
-## 5                      NA       NA       FALSE       NA          0.82     CC0
-## 6                      NA       NA       FALSE       NA          0.63     CC0</code></pre>
+## 1                      NA       NA       FALSE       NA          0.90     CC0
+## 2                      NA       NA       FALSE       NA          0.89     CC0
+## 3                      NA       NA       FALSE       NA          0.92     CC0
+## 4                      NA       NA       FALSE       NA          0.91     CC0
+## 5                      NA       NA       FALSE       NA          0.99     CC0
+## 6                      NA       NA       FALSE       NA          0.91     CC0</code></pre>
 <pre class="r"><code>n_total_WI &lt;- nrow(WI)
 n_hit_WI &lt;- WI %&gt;%
   filter(is_blank != 0) %&gt;%   ### The WI file give blanks 1s and hits 0s
@@ -318,17 +316,17 @@ percent_capture_WI &lt;- (n_hit_WI/n_total_WI)*100
 n_total_WI ###Total Photos</code></pre>
 <pre><code>## [1] 1633</code></pre>
 <pre class="r"><code>n_hit_WI  ###Total Hits</code></pre>
-<pre><code>## [1] 374</code></pre>
+<pre><code>## [1] 376</code></pre>
 <pre class="r"><code>percent_capture_WI ### Percent Capture Rate</code></pre>
-<pre><code>## [1] 22.90263</code></pre>
+<pre><code>## [1] 23.02511</code></pre>
 <ol style="list-style-type: decimal">
 <li>Capture rate by hand is 22.39% and the capture rate for WI is 22.90%</li>
 </ol>
 <pre class="r"><code>### Step 2: Compare the 2 methods to see if they return hits and misses on the same photos.
 WI_filtered &lt;- WI %&gt;%
-  select(region, site, shrub_density, plot, cam_ID, week, file_name, is_blank, common_name)
+  select(region, site, shrub_density, plot, cam_ID, file_name, is_blank, common_name)
 
-combined &lt;- left_join(data, WI_filtered, by=c(&quot;region&quot;, &quot;site&quot;, &quot;shrub_density&quot;, &quot;plot&quot;, &quot;week&quot;, &quot;cam_ID&quot;, &quot;file_name&quot;))
+combined &lt;- left_join(data, WI_filtered, by=c(&quot;region&quot;, &quot;site&quot;, &quot;shrub_density&quot;, &quot;plot&quot;, &quot;cam_ID&quot;, &quot;file_name&quot;))
 combined &lt;- combined%&gt;%
   select(-tool, -behavior, -observation, -notes)
 
@@ -337,13 +335,13 @@ t.test(combined$animal, combined$is_blank, paired = TRUE, alternative = &quot;tw
 ##  Paired t-test
 ## 
 ## data:  combined$animal and combined$is_blank
-## t = -1.6338, df = 1640, p-value = 0.1025
+## t = -2.4966, df = 1477, p-value = 0.01265
 ## alternative hypothesis: true mean difference is not equal to 0
 ## 95 percent confidence interval:
-##  -0.021455248  0.001954943
+##  -0.025371658 -0.003045122
 ## sample estimates:
 ## mean difference 
-##    -0.009750152</code></pre>
+##     -0.01420839</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>The data between hand counting and WI seems to be worryingly different from one another.</li>
 <li>Most likely it was the software not picking up animal individuals and identifying individuals when not present.</li>
@@ -368,9 +366,19 @@ n_one &lt;- df %&gt;%
   filter(difference == 1) %&gt;% 
   nrow()</code></pre>
 <p>I crossreferenced everything and the ones that WI says there are hits, I confirmed there are hits BUT the files say I didnt. Wheni go back and check my data says that i recorded it as an observation. Not sure whats going on with the data.</p>
-<p>RATES: Mario 22.4 WI 22.9</p>
-<p>Differences Tallied&quot; -1 : 41 (After reviewing the files this number is not accurate and should be MUCH closer to 0) 0 : 1545 1 : 40 (Makes sense as the software sometimes does not properly identify animals)</p>
-<p>specific photos: So after reviewing it turn out that I uploaded an additional file of photos, hence why I was getting so many -1s in the data. Excluding those, there should be next to no -1s in the data.</p>
+<p>RATES: Mario 22.2 WI 23.025</p>
+<p>Differences Tallied&quot; -1 : 31 (After reviewing the files this number is not accurate and should be MUCH closer to 0)</p>
+<p>0 : 1407</p>
+<p>1 : 25 (Makes sense as the software sometimes does not properly identify animals)</p>
+<pre class="r"><code>### Percent hits on cameras via human
+(n_hit/n_total)*100</code></pre>
+<pre><code>## [1] 22.21546</code></pre>
+<pre class="r"><code>### Percent animals missed from WI vs visually seen
+(n_one/n_hit)*100</code></pre>
+<pre><code>## [1] 6.849315</code></pre>
+</div>
+<div id="so-after-cleaning-everything-up-and-running-the-math-wi-seems-to-only-miss-6.8-of-animal-photos-where-compared-to-visually-processing-the-photos.-i-think-this-is-a-good-tool-then" class="section level1">
+<h1>So after cleaning everything up, and running the math, WI seems to only miss 6.8% of animal photos where compared to visually processing the photos. I think this is a good tool then</h1>
 </div>
 
 

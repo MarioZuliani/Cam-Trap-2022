@@ -39,7 +39,7 @@ percent_capture ### Percent Capture Rate
 ```
 # Test Wildlife Insight App Accuracy
 ```{r}
-WI <- read.csv("images.csv")
+WI <- read.csv("images_2.csv")
 WI %>%
     group_by(genus) %>% filter(genus != "NA") %>%
     summarise(count=n())
@@ -61,9 +61,9 @@ percent_capture_WI ### Percent Capture Rate
 ```{r}
 ### Step 2: Compare the 2 methods to see if they return hits and misses on the same photos.
 WI_filtered <- WI %>%
-  select(region, site, shrub_density, plot, cam_ID, week, file_name, is_blank, common_name)
+  select(region, site, shrub_density, plot, cam_ID, file_name, is_blank, common_name)
 
-combined <- left_join(data, WI_filtered, by=c("region", "site", "shrub_density", "plot", "week", "cam_ID", "file_name"))
+combined <- left_join(data, WI_filtered, by=c("region", "site", "shrub_density", "plot", "cam_ID", "file_name"))
 combined <- combined%>%
   select(-tool, -behavior, -observation, -notes)
 
@@ -97,13 +97,23 @@ I crossreferenced everything and the ones that WI says there are hits, I confirm
 
 
 RATES:
-Mario 22.4
-WI 22.9
+Mario 22.2
+WI 23.025
 
 Differences Tallied"
--1 : 41   (After reviewing the files this number is not accurate and should be MUCH closer to 0)
-0 : 1545
-1 : 40       (Makes sense as the software sometimes does not properly identify animals)
+-1 : 31   (After reviewing the files this number is not accurate and should be MUCH closer to 0)
 
-specific photos:
-So after reviewing it turn out that I uploaded an additional file of photos, hence why I was getting so many -1s in the data. Excluding those, there should be next to no -1s in the data.
+0 : 1407
+
+1 : 25       (Makes sense as the software sometimes does not properly identify animals)
+
+
+```{r}
+### Percent hits on cameras via human
+(n_hit/n_total)*100
+
+### Percent animals missed from WI vs visually seen
+(n_one/n_hit)*100
+```
+
+# So after cleaning everything up, and running the math, WI seems to only miss 6.8% of animal photos where compared to visually processing the photos. I think this is a good tool then
