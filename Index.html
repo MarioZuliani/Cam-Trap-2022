@@ -402,7 +402,32 @@ knitr::kable(tally)</code></pre>
 </tr>
 </tbody>
 </table>
+<pre class="r"><code>### Accuracy of WI System
+subset &lt;- subset(df, difference == -1)
+#write.csv(subset, &quot;Subset.csv&quot;)
+accuracy &lt;- read.csv(&quot;Subset.csv&quot;)
+
+n_total_accuracy &lt;- nrow(accuracy)
+
+n_false &lt;- accuracy %&gt;%
+  filter(accuracy == FALSE) %&gt;% 
+  nrow()
+
+### Incorrectly detected animal there.
+percent_incorrect &lt;- (n_false/n_total_accuracy)*100
+percent_incorrect</code></pre>
+<pre><code>## [1] 58.06452</code></pre>
+<pre class="r"><code>n_true &lt;- accuracy %&gt;%
+  filter(accuracy == TRUE) %&gt;%
+  nrow()
+
+percent_correct &lt;- (n_true/n_total_accuracy)*100
+percent_correct</code></pre>
+<pre><code>## [1] 41.93548</code></pre>
 </div>
+</div>
+<div id="based-on-the-31-detected-via-wi-software-that-were-missed-when-visually-conducted-58-were-false-positives-while-41.9-were-true-positives." class="section level1">
+<h1>Based on the 31 detected via WI software that were missed when visually conducted, 58% were false positives while 41.9% were true positives.</h1>
 </div>
 <div id="so-after-cleaning-everything-up-and-running-the-math-wi-seems-to-only-miss-6.8-of-animal-photos-where-compared-to-visually-processing-the-photos.-i-think-this-is-a-good-tool-then" class="section level1">
 <h1>So after cleaning everything up, and running the math, WI seems to only miss 6.8% of animal photos where compared to visually processing the photos. I think this is a good tool then</h1>
